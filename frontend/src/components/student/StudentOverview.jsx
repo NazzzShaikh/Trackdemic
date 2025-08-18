@@ -24,12 +24,12 @@ const StudentOverview = () => {
   const fetchDashboardData = async () => {
     try {
       // Fetch enrolled courses
-      const enrollmentsResponse = await courseAPI.getEnrollments()
+      const enrollmentsResponse = await courseAPI.getMyEnrollments()
       const enrollments = enrollmentsResponse.data.results || []
 
       // Fetch quiz attempts
       const attemptsResponse = await quizAPI.getMyAttempts()
-      const attempts = attemptsResponse.data.results || []
+      const attempts = attemptsResponse.data.results || attemptsResponse.data || []
 
       // Calculate stats
       const completedAttempts = attempts.filter((attempt) => attempt.completed_at)

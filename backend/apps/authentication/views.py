@@ -97,14 +97,8 @@ def logout_view(request):
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
 def verify_token(request):
+    serializer = UserProfileSerializer(request.user)
     return Response({
         'valid': True,
-        'user': {
-            'id': request.user.id,
-            'username': request.user.username,
-            'email': request.user.email,
-            'user_type': request.user.user_type,
-            'first_name': request.user.first_name,
-            'last_name': request.user.last_name,
-        }
+        'user': serializer.data
     })

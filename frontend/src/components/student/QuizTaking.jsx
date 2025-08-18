@@ -55,6 +55,10 @@ const QuizTaking = () => {
       setAttempt(response.data.attempt)
       setTimeLeft(quiz.time_limit_minutes * 60) // Convert to seconds
       setQuizStarted(true)
+      // Increment attempts locally only when a new attempt was created (HTTP 201)
+      if (response.status === 201) {
+        setQuiz((prev) => (prev ? { ...prev, attempts_count: (prev.attempts_count || 0) + 1 } : prev))
+      }
       toast.success("Quiz started! Good luck!")
     } catch (error) {
       toast.error(error.response?.data?.error || "Failed to start quiz")
@@ -89,7 +93,7 @@ const QuizTaking = () => {
         }
       })
 
-      const response = await quizAPI.submitQuiz(quizId, { answers: formattedAnswers })
+      const response = await quizAPI.submitQuiz(quizId, formattedAnswers)
       toast.success("Quiz submitted successfully!")
 
       // Show results
