@@ -8,6 +8,8 @@ __pycache__/
 *.log
 # Ignore environment variable files
 .env
+frontend/package-lock.json
+frontend/package.json
 # Ignore coverage reports
 coverage.xml
 # Ignore IDE/editor specific files
