@@ -38,15 +38,7 @@ const MyQuizzes = () => {
     }
   }
 
-  const toggleQuizStatus = async (quizId, currentStatus) => {
-    try {
-      await facultyAPI.updateQuiz(quizId, { is_active: !currentStatus })
-      toast.success(`Quiz ${!currentStatus ? "activated" : "deactivated"} successfully`)
-      fetchMyQuizzes()
-    } catch (error) {
-      toast.error("Failed to update quiz status")
-    }
-  }
+
 
   if (loading) {
     return (
@@ -76,9 +68,7 @@ const MyQuizzes = () => {
                 <div className="card-body d-flex flex-column">
                   <div className="mb-2">
                     <span className="badge bg-primary me-2">{quiz.quiz_type.replace("_", " ")}</span>
-                    <span className={`badge ${quiz.is_active ? "bg-success" : "bg-secondary"}`}>
-                      {quiz.is_active ? "Active" : "Inactive"}
-                    </span>
+                    <span className="badge bg-success">Active</span>
                   </div>
 
                   <h5 className="card-title">{quiz.title}</h5>
@@ -143,20 +133,7 @@ const MyQuizzes = () => {
                     </button>
                   </div>
 
-                  <div className="d-flex gap-2">
-                    <button
-                      className={`btn btn-sm flex-grow-1 ${
-                        quiz.is_active 
-                          ? "btn-outline-warning" 
-                          : "btn-outline-success"
-                      }`}
-                      onClick={() => toggleQuizStatus(quiz.id, quiz.is_active)}
-                    >
-                      <i className={`fas ${
-                        quiz.is_active ? "fa-pause" : "fa-play"
-                      } me-1`}></i>
-                      {quiz.is_active ? "Deactivate" : "Activate"}
-                    </button>
+                  <div className="d-flex justify-content-end">
                     <button
                       className="btn btn-outline-danger btn-sm"
                       onClick={() => handleDeleteQuiz(quiz.id)}

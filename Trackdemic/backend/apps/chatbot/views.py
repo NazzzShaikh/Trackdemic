@@ -1,6 +1,6 @@
 import os
 import uuid
-import openai
+import google.generativeai as genai
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -9,8 +9,9 @@ from django.conf import settings
 from .models import ChatSession, ChatMessage
 from .serializers import ChatMessageSerializer, ChatSessionSerializer
 
-# Configure OpenAI (you can also use Hugging Face Transformers)
-openai.api_key = os.getenv('OPENAI_API_KEY', 'your-openai-api-key-here')
+# Configure Gemini
+genai.configure(api_key=os.getenv('GEMINI_API_KEY', 'AIzaSyDcLmwL8XuWfgiEG6mgTjnJHkRvRE0njAs'))
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -67,20 +68,16 @@ def chat_with_bot(request):
             elif msg.message_type == 'bot':
                 conversation_context.append({"role": "assistant", "content": msg.content})
         
-        # Get AI response using OpenAI
+        # Get AI response using Gemini
         try:
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=conversation_context,
-                max_tokens=500,
-                temperature=0.7
-            )
+            # Create a simple prompt for the AI
+            prompt = f"You are a helpful AI study assistant. Answer this question: {user_message}"
+            response = model.generate_content(prompt)
+            bot_response = response.text.strip() if response.text else "I couldn't generate a response. Please try again."
             
-            bot_response = response.choices[0].message.content.strip()
-            
-        except Exception as openai_error:
-            # Fallback response if OpenAI fails
-            print(f"OpenAI API error: {openai_error}")
+        except Exception as gemini_error:
+            # Fallback response if Gemini fails
+            print(f"Gemini API error: {gemini_error}")
             bot_response = """I'm here to help you with your studies! However, I'm experiencing some technical difficulties right now. 
             Please try asking your question again, or you can contact your instructor for immediate assistance. 
             Common topics I can help with include:
