@@ -85,7 +85,7 @@ class QuizAttempt(models.Model):
     score = models.FloatField(blank=True, null=True)
     percentage = models.FloatField(blank=True, null=True)
     is_passed = models.BooleanField(default=False)
-    time_taken_minutes = models.PositiveIntegerField(blank=True, null=True)
+    time_taken_minutes = models.FloatField(blank=True, null=True)
 
     class Meta:
         ordering = ['-started_at']

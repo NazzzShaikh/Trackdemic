@@ -129,6 +129,19 @@ def submit_quiz(request, quiz_id):
                     answer.is_correct = True
                     answer.points_earned = question.points
                     earned_points += question.points
+            elif question.question_type == 'short_answer':
+                # For short answer, check if the answer matches any correct choice
+                # This allows faculty to provide multiple acceptable answers
+                correct_choices = question.choices.filter(is_correct=True)
+                student_answer = answer.text_answer.strip().lower()
+                
+                for correct_choice in correct_choices:
+                    correct_text = correct_choice.choice_text.strip().lower()
+                    if student_answer == correct_text:
+                        answer.is_correct = True
+                        answer.points_earned = question.points
+                        earned_points += question.points
+                        break
             
             answer.save()
         
@@ -141,7 +154,7 @@ def submit_quiz(request, quiz_id):
         attempt.score = earned_points
         attempt.percentage = percentage
         attempt.is_passed = percentage >= quiz.passing_score
-        attempt.time_taken_minutes = int(time_taken)
+        attempt.time_taken_minutes = round(time_taken, 2)  # Store as float with 2 decimal places
         attempt.save()
         
         return Response({

@@ -139,6 +139,11 @@ const QuizzesList = () => {
                         </>
                       )}
                       <small className="text-muted">
+                        <i className="fas fa-calendar me-1"></i>
+                        Created: {quiz.created_at ? new Date(quiz.created_at).toLocaleDateString() : 'N/A'}
+                      </small>
+                      <br />
+                      <small className="text-muted">
                         <i className="fas fa-clock me-1"></i>
                         {quiz.time_limit_minutes} minutes
                       </small>

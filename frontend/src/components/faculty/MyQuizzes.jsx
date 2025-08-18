@@ -120,7 +120,7 @@ const MyQuizzes = () => {
                     <br />
                     <small className="text-muted">
                       <i className="fas fa-calendar me-1"></i>
-                      Created: {new Date(quiz.created_at).toLocaleDateString()}
+                      Created: {quiz.created_at ? new Date(quiz.created_at).toLocaleDateString() : 'N/A'}
                     </small>
                   </div>
 

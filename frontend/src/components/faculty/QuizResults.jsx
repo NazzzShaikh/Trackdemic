@@ -168,7 +168,7 @@ const QuizResults = () => {
                         </div>
                       </td>
                       <td>
-                        {new Date(attempt.started_at).toLocaleString()}
+                        {attempt.started_at ? new Date(attempt.started_at).toLocaleString() : 'N/A'}
                       </td>
                       <td>
                         {attempt.completed_at 
@@ -201,7 +201,9 @@ const QuizResults = () => {
                       </td>
                       <td>
                         {attempt.time_taken_minutes ? (
-                          <span>{attempt.time_taken_minutes} min</span>
+                          <span>
+                            {Math.floor(attempt.time_taken_minutes)}m {Math.round((attempt.time_taken_minutes % 1) * 60)}s
+                          </span>
                         ) : (
                           <span className="text-muted">-</span>
                         )}
@@ -253,15 +255,22 @@ const QuizResults = () => {
                 </div>
                 <div className="row mb-3">
                   <div className="col-md-6">
-                    <strong>Started:</strong> {new Date(selectedAttempt.started_at).toLocaleString()}
+                    <strong>Started:</strong> {selectedAttempt.started_at ? new Date(selectedAttempt.started_at).toLocaleString() : 'N/A'}
                   </div>
                   <div className="col-md-6">
-                    <strong>Completed:</strong> {new Date(selectedAttempt.completed_at).toLocaleString()}
+                    <strong>Completed:</strong> {selectedAttempt.completed_at ? new Date(selectedAttempt.completed_at).toLocaleString() : 'N/A'}
                   </div>
                 </div>
                 <div className="row mb-3">
                   <div className="col-md-6">
-                    <strong>Time Taken:</strong> {selectedAttempt.time_taken_minutes} minutes
+                    <strong>Time Taken:</strong> 
+                    {selectedAttempt.time_taken_minutes ? (
+                      <span>
+                        {Math.floor(selectedAttempt.time_taken_minutes)}m {Math.round((selectedAttempt.time_taken_minutes % 1) * 60)}s
+                      </span>
+                    ) : (
+                      <span className="text-muted">-</span>
+                    )}
                   </div>
                   <div className="col-md-6">
                     <strong>Status:</strong> 

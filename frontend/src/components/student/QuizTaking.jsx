@@ -98,13 +98,17 @@ const QuizTaking = () => {
 
       // Show results
       const results = response.data.results
+      const timeTaken = results.time_taken_minutes || 0
+      const minutes = Math.floor(timeTaken)
+      const seconds = Math.round((timeTaken - minutes) * 60)
+      
       setTimeout(() => {
         alert(
           `Quiz Results:\n` +
             `Score: ${results.score}/${results.total_points}\n` +
             `Percentage: ${Math.round(results.percentage)}%\n` +
             `Status: ${results.is_passed ? "PASSED" : "FAILED"}\n` +
-            `Time taken: ${results.time_taken_minutes} minutes`,
+            `Time taken: ${minutes}m ${seconds}s`,
         )
         navigate("/student/quizzes")
       }, 1000)

@@ -25,12 +25,13 @@ class QuizListSerializer(serializers.ModelSerializer):
     attempts_count = serializers.SerializerMethodField()
     best_score = serializers.SerializerMethodField()
     questions = serializers.ListField(write_only=True, required=False)
+    created_at = serializers.ReadOnlyField()
     
     class Meta:
         model = Quiz
         fields = ['id', 'title', 'description', 'course', 'quiz_type', 'topic',
                  'time_limit_minutes', 'max_attempts', 'passing_score',
-                 'total_questions', 'total_points', 'attempts_count', 'best_score', 'questions']
+                 'total_questions', 'total_points', 'attempts_count', 'best_score', 'questions', 'created_at']
     
     def create(self, validated_data):
         questions_data = validated_data.pop('questions', [])
@@ -71,13 +72,14 @@ class QuizDetailSerializer(serializers.ModelSerializer):
     attempts_count = serializers.SerializerMethodField()
     best_score = serializers.SerializerMethodField()
     can_attempt = serializers.SerializerMethodField()
+    created_at = serializers.ReadOnlyField()
     
     class Meta:
         model = Quiz
         fields = ['id', 'title', 'description', 'course', 'quiz_type', 'topic',
                  'time_limit_minutes', 'max_attempts', 'passing_score',
                  'questions', 'total_questions', 'total_points', 
-                 'attempts_count', 'best_score', 'can_attempt']
+                 'attempts_count', 'best_score', 'can_attempt', 'created_at']
     
     def get_attempts_count(self, obj):
         request = self.context.get('request')

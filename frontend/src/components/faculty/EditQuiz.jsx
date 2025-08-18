@@ -88,7 +88,30 @@ const EditQuiz = () => {
 
   const handleQuestionChange = (questionIndex, field, value) => {
     const updatedQuestions = [...questions]
-    updatedQuestions[questionIndex] = { ...updatedQuestions[questionIndex], [field]: value }
+    const updatedQuestion = { ...updatedQuestions[questionIndex], [field]: value }
+    
+    // Handle question type changes
+    if (field === 'question_type') {
+      if (value === 'true_false') {
+        // Set up TRUE/FALSE choices
+        updatedQuestion.choices = [
+          { choice_text: "True", is_correct: false },
+          { choice_text: "False", is_correct: false }
+        ]
+      } else if (value === 'multiple_choice') {
+        // Set up multiple choice choices if not already present
+        if (!updatedQuestion.choices || updatedQuestion.choices.length === 0) {
+          updatedQuestion.choices = [
+            { choice_text: "", is_correct: false },
+            { choice_text: "", is_correct: false },
+            { choice_text: "", is_correct: false },
+            { choice_text: "", is_correct: false }
+          ]
+        }
+      }
+    }
+    
+    updatedQuestions[questionIndex] = updatedQuestion
     setQuestions(updatedQuestions)
   }
 
@@ -424,7 +447,7 @@ const EditQuiz = () => {
                         </div>
                       </div>
 
-                      {question.question_type !== "short_answer" && (
+                      {question.question_type !== "short_answer" ? (
                         <div>
                           <div className="d-flex justify-content-between align-items-center mb-2">
                             <label className="form-label">Answer Choices</label>
@@ -445,24 +468,19 @@ const EditQuiz = () => {
                                 <input
                                   className="form-check-input"
                                   type={question.question_type === "multiple_choice" ? "radio" : "checkbox"}
-                                  name={`question_${questionIndex}_correct`}
                                   checked={choice.is_correct}
                                   onChange={(e) => {
                                     if (question.question_type === "multiple_choice") {
                                       // For multiple choice, only one can be correct
-                                      setQuestions((prev) =>
-                                        prev.map((q, qIndex) =>
-                                          qIndex === questionIndex
-                                            ? {
-                                                ...q,
-                                                choices: q.choices.map((c, cIndex) => ({
-                                                  ...c,
-                                                  is_correct: cIndex === choiceIndex,
-                                                })),
-                                              }
-                                            : q,
-                                        ),
-                                      )
+                                      const updatedQuestions = [...questions]
+                                      updatedQuestions[questionIndex] = {
+                                        ...updatedQuestions[questionIndex],
+                                        choices: updatedQuestions[questionIndex].choices.map((c, cIndex) => ({
+                                          ...c,
+                                          is_correct: cIndex === choiceIndex,
+                                        })),
+                                      }
+                                      setQuestions(updatedQuestions)
                                     } else {
                                       handleChoiceChange(questionIndex, choiceIndex, "is_correct", e.target.checked)
                                     }
@@ -480,6 +498,53 @@ const EditQuiz = () => {
                                 required
                               />
                               {question.question_type === "multiple_choice" && question.choices.length > 2 && (
+                                <button
+                                  type="button"
+                                  className="btn btn-outline-danger btn-sm"
+                                  onClick={() => removeChoice(questionIndex, choiceIndex)}
+                                >
+                                  <i className="fas fa-trash"></i>
+                                </button>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div>
+                          <div className="d-flex justify-content-between align-items-center mb-2">
+                            <label className="form-label">Correct Answers (add multiple acceptable answers)</label>
+                            <button
+                              type="button"
+                              className="btn btn-outline-secondary btn-sm"
+                              onClick={() => addChoice(questionIndex)}
+                            >
+                              <i className="fas fa-plus me-1"></i>
+                              Add Answer
+                            </button>
+                          </div>
+                          {question.choices.map((choice, choiceIndex) => (
+                            <div key={choiceIndex} className="d-flex align-items-center mb-2">
+                              <div className="form-check me-2">
+                                <input
+                                  className="form-check-input"
+                                  type="checkbox"
+                                  checked={choice.is_correct}
+                                  onChange={(e) =>
+                                    handleChoiceChange(questionIndex, choiceIndex, "is_correct", e.target.checked)
+                                  }
+                                />
+                              </div>
+                              <input
+                                type="text"
+                                className="form-control me-2"
+                                placeholder="Correct answer"
+                                value={choice.choice_text}
+                                onChange={(e) =>
+                                  handleChoiceChange(questionIndex, choiceIndex, "choice_text", e.target.value)
+                                }
+                                required
+                              />
+                              {question.choices.length > 1 && (
                                 <button
                                   type="button"
                                   className="btn btn-outline-danger btn-sm"
