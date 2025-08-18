@@ -43,8 +43,8 @@ error.log
 temp/
 # Ignore specific file types
 *.bak
-# Ignore specific documentation files
-*.md
+# # Ignore specific documentation files
+# *.md
 # Ignore specific image files
 # *.png
 # *.jpg
