@@ -6,7 +6,8 @@ from django.db.models import Q, Avg
 from .models import Course, Category, Enrollment, CourseReview, CourseModule, Lesson
 from .serializers import (
     CourseListSerializer, CourseDetailSerializer, CategorySerializer,
-    EnrollmentSerializer, CourseReviewSerializer, CourseModuleSerializer
+    EnrollmentSerializer, CourseReviewSerializer, CourseModuleSerializer,
+    CourseCreateUpdateSerializer
 )
 from apps.users.models import User
 from apps.quizzes.models import QuizAttempt
@@ -142,7 +143,13 @@ class FacultyCourseListView(generics.ListCreateAPIView):
         # Faculty can only see their own courses
         return Course.objects.filter(instructor=self.request.user)
     
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return CourseCreateUpdateSerializer
+        return CourseListSerializer
+
     def perform_create(self, serializer):
+        # Support file uploads via multipart
         serializer.save(instructor=self.request.user)
 
 
@@ -152,6 +159,11 @@ class FacultyCourseDetailView(generics.RetrieveUpdateDestroyAPIView):
     
     def get_queryset(self):
         return Course.objects.filter(instructor=self.request.user)
+
+    def get_serializer_class(self):
+        if self.request.method in ['PUT', 'PATCH']:
+            return CourseCreateUpdateSerializer
+        return CourseDetailSerializer
 
 
 @api_view(['GET'])

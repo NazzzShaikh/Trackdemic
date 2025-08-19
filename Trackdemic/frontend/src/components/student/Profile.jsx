@@ -56,6 +56,8 @@ const Profile = () => {
     try {
       const result = await updateProfile(profileData)
       if (result.success) {
+        // Update local state immediately with the new data
+        setProfileData(result.user)
         toast.success("Profile updated successfully!")
       } else {
         toast.error(result.error || "Failed to update profile")

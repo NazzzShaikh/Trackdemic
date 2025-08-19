@@ -40,7 +40,7 @@ class CourseListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ['id', 'title', 'description', 'category', 'instructor', 
-                 'difficulty', 'duration_hours', 'price', 'thumbnail',
+                 'difficulty', 'duration_hours', 'price', 'thumbnail', 'is_active',
                  'enrolled_count', 'average_rating', 'is_enrolled', 'created_at']
     
     def get_is_enrolled(self, obj):
@@ -66,7 +66,7 @@ class CourseDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ['id', 'title', 'description', 'category', 'instructor', 
-                 'difficulty', 'duration_hours', 'price', 'thumbnail',
+                 'difficulty', 'duration_hours', 'price', 'thumbnail', 'is_active',
                  'modules', 'enrolled_count', 'average_rating', 'is_enrolled',
                  'enrollment_progress', 'created_at']
     
@@ -117,3 +117,11 @@ class CourseReviewSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['student'] = self.context['request'].user
         return super().create(validated_data)
+
+
+class CourseCreateUpdateSerializer(serializers.ModelSerializer):
+    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
+    
+    class Meta:
+        model = Course
+        fields = ['title', 'description', 'category', 'difficulty', 'duration_hours', 'price', 'thumbnail', 'is_active']

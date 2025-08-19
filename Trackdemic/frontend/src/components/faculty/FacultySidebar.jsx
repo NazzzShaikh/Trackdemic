@@ -10,6 +10,7 @@ const FacultySidebar = () => {
 
   const menuItems = [
     { path: "/faculty", label: "Dashboard", icon: "fas fa-tachometer-alt" },
+    { path: "/faculty/profile", label: "Profile", icon: "fas fa-user" },
     { path: "/faculty/courses", label: "My Courses", icon: "fas fa-book" },
     { path: "/faculty/quizzes", label: "My Quizzes", icon: "fas fa-question-circle" },
     { path: "/faculty/students", label: "Students", icon: "fas fa-users" },

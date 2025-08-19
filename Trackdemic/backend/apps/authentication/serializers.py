@@ -24,6 +24,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             'user_type': self.user.user_type,
             'first_name': self.user.first_name,
             'last_name': self.user.last_name,
+            'is_superuser': self.user.is_superuser,
         }
         return data
 
@@ -80,7 +81,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'first_name', 'last_name', 
-                 'user_type', 'phone_number', 'profile_picture', 'bio',
+                 'user_type', 'is_superuser', 'phone_number', 'profile_picture', 'bio',
                  'date_of_birth', 'student_profile', 'faculty_profile')
         read_only_fields = ('id', 'username', 'user_type')
     

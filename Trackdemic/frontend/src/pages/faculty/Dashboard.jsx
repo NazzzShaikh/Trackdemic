@@ -3,6 +3,7 @@
 import { Routes, Route } from "react-router-dom"
 import FacultySidebar from "../../components/faculty/FacultySidebar"
 import FacultyOverview from "../../components/faculty/FacultyOverview"
+import FacultyProfile from "../../components/faculty/FacultyProfile"
 import MyCourses from "../../components/faculty/MyCourses"
 import CreateCourse from "../../components/faculty/CreateCourse"
 import EditCourse from "../../components/faculty/EditCourse"
@@ -24,17 +25,18 @@ const FacultyDashboard = () => {
         <div className="col-md-9 col-lg-10">
           <div className="p-4">
             <Routes>
-              <Route path="/" element={<FacultyOverview />} />
-              <Route path="/courses" element={<MyCourses />} />
-              <Route path="/courses/create" element={<CreateCourse />} />
-              <Route path="/courses/:courseId/edit" element={<EditCourse />} />
-              <Route path="/courses/:courseId/students" element={<CourseStudents />} />
-              <Route path="/quizzes" element={<MyQuizzes />} />
-              <Route path="/quizzes/create" element={<CreateQuiz />} />
-              <Route path="/quizzes/:quizId/edit" element={<EditQuiz />} />
-              <Route path="/quizzes/:quizId/results" element={<QuizResults />} />
-              <Route path="/students" element={<Students />} />
-              <Route path="/students/:studentId/performance" element={<StudentPerformance />} />
+              <Route index element={<FacultyOverview />} />
+              <Route path="profile" element={<FacultyProfile />} />
+              <Route path="courses" element={<MyCourses />} />
+              <Route path="courses/create" element={<CreateCourse />} />
+              <Route path="courses/:courseId/edit" element={<EditCourse />} />
+              <Route path="courses/:courseId/students" element={<CourseStudents />} />
+              <Route path="quizzes" element={<MyQuizzes />} />
+              <Route path="quizzes/create" element={<CreateQuiz />} />
+              <Route path="quizzes/:quizId/edit" element={<EditQuiz />} />
+              <Route path="quizzes/:quizId/results" element={<QuizResults />} />
+              <Route path="students" element={<Students />} />
+              <Route path="students/:studentId/performance" element={<StudentPerformance />} />
             </Routes>
           </div>
         </div>

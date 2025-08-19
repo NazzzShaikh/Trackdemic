@@ -34,8 +34,8 @@ const Login = () => {
       if (result.success) {
         toast.success("Login successful!")
 
-        // Redirect based on user type
-        const userType = result.user.user_type
+        // Redirect based on user type (treat superusers as admin)
+        const userType = result.user.is_superuser ? "admin" : result.user.user_type
         let redirectPath = from
 
         if (from === "/") {

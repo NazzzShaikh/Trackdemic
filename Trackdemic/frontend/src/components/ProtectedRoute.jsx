@@ -22,7 +22,9 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 
-  if (allowedRoles.length > 0 && !allowedRoles.includes(user?.user_type)) {
+  const effectiveUserType = user?.is_superuser ? "admin" : user?.user_type
+
+  if (allowedRoles.length > 0 && !allowedRoles.includes(effectiveUserType)) {
     // User doesn't have required role
     return (
       <div className="container mt-5">

@@ -63,8 +63,9 @@ const UserManagement = () => {
     }
   }
 
-  const getUserTypeColor = (userType) => {
-    switch (userType) {
+  const getUserTypeColor = (user) => {
+    const type = user.is_superuser ? "admin" : user.user_type
+    switch (type) {
       case "admin":
         return "danger"
       case "faculty":
@@ -140,9 +141,12 @@ const UserManagement = () => {
                       <td>{user.email}</td>
                       <td>{user.username}</td>
                       <td>
-                        <span className={`badge bg-${getUserTypeColor(user.user_type)}`}>
-                          {user.user_type.charAt(0).toUpperCase() + user.user_type.slice(1)}
-                        </span>
+                        {(() => {
+                          const displayType = user.is_superuser ? 'admin' : user.user_type
+                          const label = displayType.charAt(0).toUpperCase() + displayType.slice(1)
+                          const color = getUserTypeColor(user)
+                          return <span className={`badge bg-${color}`}>{label}</span>
+                        })()}
                       </td>
                       <td>{new Date(user.date_joined).toLocaleDateString()}</td>
                       <td>
@@ -158,7 +162,7 @@ const UserManagement = () => {
                           <button
                             className="btn btn-outline-danger"
                             onClick={() => handleDeleteUser(user.id)}
-                            disabled={user.user_type === "admin"}
+                            disabled={(user.is_superuser || user.user_type === "admin")}
                           >
                             Delete
                           </button>

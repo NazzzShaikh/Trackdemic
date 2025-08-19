@@ -29,7 +29,21 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         const response = await authAPI.verifyToken()
         if (response.data.valid) {
-          setUser(response.data.user)
+          // Try to get user data from localStorage first, then from API
+          const savedUser = localStorage.getItem("user")
+          let userData = response.data.user
+          
+          if (savedUser) {
+            try {
+              const parsedUser = JSON.parse(savedUser)
+              // Merge saved data with API data
+              userData = { ...parsedUser, ...userData }
+            } catch (error) {
+              console.error("Error parsing saved user data:", error)
+            }
+          }
+          
+          setUser(userData)
           setIsAuthenticated(true)
         } else {
           clearAuth()
@@ -49,6 +63,8 @@ export const AuthProvider = ({ children }) => {
   const clearAuth = () => {
     localStorage.removeItem("access_token")
     localStorage.removeItem("refresh_token")
+    localStorage.removeItem("user")
+    localStorage.removeItem("facultyProfile")
     setUser(null)
     setIsAuthenticated(false)
   }
@@ -61,6 +77,9 @@ export const AuthProvider = ({ children }) => {
       // Store tokens
       localStorage.setItem("access_token", access)
       localStorage.setItem("refresh_token", refresh)
+      
+      // Store user data for persistence
+      localStorage.setItem("user", JSON.stringify(userData))
 
       setUser(userData)
       setIsAuthenticated(true)
@@ -83,6 +102,9 @@ export const AuthProvider = ({ children }) => {
       // Store tokens
       localStorage.setItem("access_token", tokens.access)
       localStorage.setItem("refresh_token", tokens.refresh)
+      
+      // Store user data for persistence
+      localStorage.setItem("user", JSON.stringify(newUser))
 
       setUser(newUser)
       setIsAuthenticated(true)
@@ -104,8 +126,24 @@ export const AuthProvider = ({ children }) => {
   const updateProfile = async (profileData) => {
     try {
       const response = await authAPI.updateProfile(profileData)
-      setUser(response.data)
-      return { success: true, user: response.data }
+      const updatedUser = response.data
+      
+      // Update user state with new data
+      setUser(updatedUser)
+      
+      // Also update localStorage if it exists
+      const currentUser = localStorage.getItem('user')
+      if (currentUser) {
+        try {
+          const parsedUser = JSON.parse(currentUser)
+          const mergedUser = { ...parsedUser, ...updatedUser }
+          localStorage.setItem('user', JSON.stringify(mergedUser))
+        } catch (error) {
+          console.error('Error updating localStorage user:', error)
+        }
+      }
+      
+      return { success: true, user: updatedUser }
     } catch (error) {
       console.error("Profile update failed:", error)
       return {

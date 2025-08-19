@@ -116,6 +116,8 @@ export const adminAPI = {
 
 // Faculty API endpoints
 export const facultyAPI = {
+  updateProfile: (profileData) => api.patch("/users/faculty/profile/update/", profileData),
+  getProfile: () => api.get("/users/faculty/profile/"),
   // Course management
   getMyCourses: (params) => api.get("/courses/faculty/", { params }),
   getCourse: (id) => api.get(`/courses/faculty/${id}/`),

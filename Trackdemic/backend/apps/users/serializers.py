@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 
-                 'user_type', 'phone_number', 'profile_picture', 'bio',
+                 'user_type', 'is_superuser', 'is_active', 'phone_number', 'profile_picture', 'bio',
                  'date_of_birth', 'student_profile', 'faculty_profile', 'date_joined']
         read_only_fields = ['id', 'username', 'user_type', 'date_joined']
     
@@ -29,6 +29,11 @@ class UserSerializer(serializers.ModelSerializer):
                 'department': obj.faculty_profile.department,
                 'specialization': obj.faculty_profile.specialization,
                 'hire_date': obj.faculty_profile.hire_date,
+                'designation': obj.faculty_profile.designation,
+                'educational_qualifications': obj.faculty_profile.educational_qualifications,
+                'certifications_awards': obj.faculty_profile.certifications_awards,
+                'degree_certificate': obj.faculty_profile.degree_certificate.url if obj.faculty_profile.degree_certificate else None,
+                'subject_expertise': obj.faculty_profile.subject_expertise,
             }
         return None
 
@@ -46,4 +51,12 @@ class FacultyProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = FacultyProfile
-        fields = ['user', 'employee_id', 'department', 'specialization', 'hire_date']
+        fields = ['user', 'employee_id', 'department', 'specialization', 'hire_date', 
+                 'designation', 'educational_qualifications', 'certifications_awards', 
+                 'degree_certificate', 'subject_expertise']
+
+class FacultyProfileUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FacultyProfile
+        fields = ['designation', 'educational_qualifications', 'certifications_awards', 
+                 'degree_certificate', 'subject_expertise']

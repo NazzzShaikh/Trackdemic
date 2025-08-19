@@ -14,7 +14,8 @@ const Navbar = () => {
 
   const getDashboardLink = () => {
     if (!user) return "/"
-    switch (user.user_type) {
+    const userType = user.is_superuser ? "admin" : user.user_type
+    switch (userType) {
       case "student":
         return "/student"
       case "faculty":
@@ -28,7 +29,8 @@ const Navbar = () => {
 
   const getProfileLink = () => {
     if (!user) return "/profile"
-    switch (user.user_type) {
+    const userType = user.is_superuser ? "admin" : user.user_type
+    switch (userType) {
       case "student":
         return "/student/profile"
       case "faculty":

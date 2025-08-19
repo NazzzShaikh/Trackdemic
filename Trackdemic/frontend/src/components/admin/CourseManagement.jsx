@@ -16,7 +16,7 @@ const CourseManagement = () => {
     try {
       setLoading(true)
       const response = await adminAPI.getAllCourses()
-      setCourses(response.data)
+      setCourses(response.data.results || [])
     } catch (error) {
       console.error("Failed to fetch courses:", error)
       toast.error("Failed to load courses")

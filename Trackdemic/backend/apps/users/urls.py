@@ -10,4 +10,8 @@ urlpatterns = [
     path('admin/users/<int:user_id>/delete/', views.admin_delete_user, name='admin_delete_user'),
     path('admin/courses/', views.admin_all_courses, name='admin_all_courses'),
     path('admin/courses/<int:course_id>/status/', views.admin_update_course_status, name='admin_update_course_status'),
+    
+    # Faculty Profile endpoints
+    path('faculty/profile/', views.get_faculty_profile, name='get_faculty_profile'),
+    path('faculty/profile/update/', views.update_faculty_profile, name='update_faculty_profile'),
 ]
