@@ -26,6 +26,20 @@ const Navbar = () => {
     }
   }
 
+  const getProfileLink = () => {
+    if (!user) return "/profile"
+    switch (user.user_type) {
+      case "student":
+        return "/student/profile"
+      case "faculty":
+        return "/faculty/profile"
+      case "admin":
+        return "/admin/profile"
+      default:
+        return "/profile"
+    }
+  }
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
       <div className="container">
@@ -62,7 +76,7 @@ const Navbar = () => {
                   </a>
                   <ul className="dropdown-menu">
                     <li>
-                      <Link className="dropdown-item" to="/profile">
+                      <Link className="dropdown-item" to={getProfileLink()}>
                         Profile
                       </Link>
                     </li>

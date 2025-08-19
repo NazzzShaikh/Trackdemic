@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
 import { AuthProvider } from "./contexts/AuthContext"
 import ProtectedRoute from "./components/ProtectedRoute"
@@ -11,6 +11,13 @@ import StudentDashboard from "./pages/student/Dashboard"
 import FacultyDashboard from "./pages/faculty/Dashboard"
 import AdminDashboard from "./pages/admin/Dashboard"
 import "./App.css"
+
+function ChatBotWrapper() {
+  const location = useLocation()
+  const hideOnQuizRoute = location.pathname.startsWith("/student/quiz/")
+  if (hideOnQuizRoute) return null
+  return <ChatBotToggle />
+}
 
 function App() {
   return (
@@ -55,7 +62,7 @@ function App() {
               />
             </Routes>
           </main>
-          <ChatBotToggle />
+          <ChatBotWrapper />
           <ToastContainer position="top-right" autoClose={3000} />
         </div>
       </Router>
